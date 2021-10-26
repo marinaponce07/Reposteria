@@ -1,0 +1,10 @@
+C:\Reposteria\Reposteria\BL.Reposteria\bin\Debug\BL.Reposteria.dll
+C:\Reposteria\Reposteria\BL.Reposteria\bin\Debug\BL.Reposteria.pdb
+C:\Reposteria\Reposteria\BL.Reposteria\obj\Debug\BL.Reposteria.csprojResolveAssemblyReference.cache
+C:\Reposteria\Reposteria\BL.Reposteria\obj\Debug\BL.Reposteria.dll
+C:\Reposteria\Reposteria\BL.Reposteria\obj\Debug\BL.Reposteria.pdb
+C:\Reposteria\Reposteria\BL.Reposteria\bin\Debug\BL.Reposteria.dll.config
+C:\Reposteria\Reposteria\BL.Reposteria\bin\Debug\EntityFramework.dll
+C:\Reposteria\Reposteria\BL.Reposteria\bin\Debug\EntityFramework.SqlServer.dll
+C:\Reposteria\Reposteria\BL.Reposteria\bin\Debug\EntityFramework.xml
+C:\Reposteria\Reposteria\BL.Reposteria\bin\Debug\EntityFramework.SqlServer.xml
