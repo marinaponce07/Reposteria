@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Win.Reposteria
+namespace Win.Rentas
 {
     public partial class FormMenu : Form
     {
@@ -17,25 +17,15 @@ namespace Win.Reposteria
             InitializeComponent();
         }
 
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
-        private void FormMenu_Load(object sender, EventArgs e)
-        {
-            Login();
-        }
-
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Login();
+            login();
         }
 
-        private void Login()
+        private void login()
         {
-            var fromLogin = new FormLogin();
-            fromLogin.ShowDialog();
+            var formLogin = new FormLogin();
+            formLogin.ShowDialog();
         }
 
         private void productosToolStripMenuItem_Click(object sender, EventArgs e)
@@ -43,13 +33,6 @@ namespace Win.Reposteria
             var formProductos = new FormProductos();
             formProductos.MdiParent = this;
             formProductos.Show();
-        }
-
-        private void proveedoresToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var formProveedores = new FormProveedores();
-            formProveedores.MdiParent = this;
-            formProveedores.Show();
 
         }
 
@@ -58,6 +41,47 @@ namespace Win.Reposteria
             var formClientes = new FormClientes();
             formClientes.MdiParent = this;
             formClientes.Show();
+        }
+
+        private void proveedoresToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var formProveedores = new FormProveedores();
+            formProveedores.MdiParent = this;
+            formProveedores.Show();
+        }
+
+        private void FormMenu_Load(object sender, EventArgs e)
+        {
+            login();
+        }
+
+        private void reporteDeVentasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var formReportedeVentas = new FormReportedeVentas();
+            formReportedeVentas.MdiParent = this;
+            formReportedeVentas.Show();
+        }
+
+        private void reporteDeProductosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var formReportedeProducto = new FormReportedeProducto();
+            formReportedeProducto.MdiParent = this;
+            formReportedeProducto.Show();
+        }
+
+        private void reporteDeClientesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var formReportedeProducto = new FormReportedeProducto();
+            formReportedeProducto.MdiParent = this;
+            formReportedeProducto.Show();
+        }
+
+        private void reporteDeProveedoresToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var formReportedeProveedores = new FormReportedeProveedores();
+            formReportedeProveedores.MdiParent = this;
+            formReportedeProveedores.Show();
+
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Win.Reposteria
+﻿namespace Win.Rentas
 {
     partial class FormProveedores
     {

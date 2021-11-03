@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Win.Reposteria
+namespace Win.Rentas
 {
     public partial class FormLogin : Form
     {
@@ -22,16 +22,6 @@ namespace Win.Reposteria
             _seguridad = new SeguridadBL();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -39,22 +29,22 @@ namespace Win.Reposteria
 
         private void button1_Click(object sender, EventArgs e)
         {
-
             string usuario;
             string contrasena;
-
-            usuario = textBox1.Text;
+           
+            usuario = textBox1.Text; 
             contrasena = textBox2.Text;
 
             var resultado = _seguridad.Autorizar(usuario, contrasena);
 
             if (resultado == true)
-            {
+
+            { 
                 this.Close();
             }
             else
             {
-                MessageBox.Show("Usuario o Contraseña incorrecta.");
+                MessageBox.Show("usuario o contrasena incorrecta");
             }
         }
 
@@ -64,7 +54,3 @@ namespace Win.Reposteria
         }
     }
 }
-
-
-
-
