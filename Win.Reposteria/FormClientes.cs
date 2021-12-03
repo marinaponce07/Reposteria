@@ -1,26 +1,66 @@
-﻿using BL.Reposteria;
+﻿using BL.Fashion;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 
-namespace Win.Rentas
+namespace Tienda
 {
     public partial class FormClientes : Form
     {
-        ClientesBL _clientesBL;
+
+        ClientesBL _clientes;
+        TblClaseCltesBL _clasecltes;
+        TblPaisesBL _paises;
+        TblDeptosBL _deptos;
+        TblMunicipiosBL _municipios;
+        TblSectorBoColsBL _sectorbocols;
+
 
         public FormClientes()
         {
             InitializeComponent();
 
-            _clientesBL = new ClientesBL();
-            listaClientesBindingSource.DataSource = _clientesBL.ObtenerClientes();
+            _clientes = new ClientesBL();
+            listaClientesBindingSource.DataSource = _clientes.ObtenerClientes();
+
+            _clasecltes = new TblClaseCltesBL();
+            listaTblClaseCltesBindingSource.DataSource = _clasecltes.ObtenerTblClaseCltes();
+
+            _paises = new TblPaisesBL();
+            listaTblPaisesBindingSource.DataSource = _paises.ObtenerTblPaises();
+
+            _deptos = new TblDeptosBL();
+            listaTblDeptosBindingSource.DataSource = _deptos.ObtenerTblDeptos();
+
+            _municipios = new TblMunicipiosBL();
+            listaTblMunicipiosBindingSource.DataSource = _municipios.ObtenerTblMunicipios();
+
+            _sectorbocols = new TblSectorBoColsBL();
+            listaTblSectorBoColsBindingSource.DataSource = _sectorbocols.ObtenerTblSectorBoCols();
+        }
+
+   
+
+        private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
+        {
+            _clientes.AgregarCliente();
+            listaClientesBindingSource.MoveLast();
+
+            DeshabilitarHabilitarBotones(false);
+        }
+
+        private void DeshabilitarHabilitarBotones(bool valor)
+        {
+            bindingNavigatorMoveFirstItem.Enabled = valor;
+            bindingNavigatorMovePreviousItem.Enabled = valor;
+            bindingNavigatorPositionItem.Enabled = valor;
+            bindingNavigatorMoveNextItem.Enabled = valor;
+            bindingNavigatorMoveLastItem.Enabled = valor;
+
+            bindingNavigatorAddNewItem.Enabled = valor;
+            bindingNavigatorDeleteItem.Enabled = valor;
+            CancelarToolStripButton.Visible = !valor;
         }
 
         private void listaClientesBindingNavigatorSaveItem_Click(object sender, EventArgs e)
@@ -28,13 +68,21 @@ namespace Win.Rentas
             listaClientesBindingSource.EndEdit();
             var cliente = (Cliente)listaClientesBindingSource.Current;
 
-            var resultado = _clientesBL.GuardarCliente(cliente);
+            if (fotoPictureBox.Image != null)
+            {
+                cliente.Foto = Program.imageToByteArray(fotoPictureBox.Image);
+            }
+            else
+            {
+                cliente.Foto = null;
+            }
+            var resultado = _clientes.GuardarCliente(cliente);
 
             if (resultado.Exitoso == true)
             {
                 listaClientesBindingSource.ResetBindings(false);
                 DeshabilitarHabilitarBotones(true);
-                MessageBox.Show("Cliente guardado");
+                MessageBox.Show("Cliente Guardado");
             }
             else
             {
@@ -42,73 +90,97 @@ namespace Win.Rentas
             }
         }
 
-        private void DeshabilitarHabilitarBotones(bool valor)
-        {
-            bindingNavigatorMoveFirstItem.Enabled = valor;
-            bindingNavigatorMoveLastItem.Enabled = valor;
-            bindingNavigatorMovePreviousItem.Enabled = valor;
-            bindingNavigatorMoveNextItem.Enabled = valor;
-            bindingNavigatorPositionItem.Enabled = valor;
-
-            bindingNavigatorAddNewItem.Enabled = valor;
-            bindingNavigatorDeleteItem.Enabled = valor;
-            toolStripButton.Visible = !valor;
-
-
-        }
-
         private void bindingNavigatorDeleteItem_Click(object sender, EventArgs e)
         {
-            if (idTextBox.Text != "")            {                var resultado = MessageBox.Show("Desea eliminar este registro?", "Eliminar", MessageBoxButtons.YesNo);                if (resultado == DialogResult.Yes)                {                    var id = Convert.ToInt32(idTextBox.Text);                    Eliminar(id);                }            }
-
+            if (idTextBox.Text != "")
+            {
+                var resultado = MessageBox.Show("¿Desea liminar este registro?", "Eliminar", MessageBoxButtons.YesNo);
+                if (resultado == DialogResult.Yes)
+                {
+                    var id = Convert.ToInt32(idTextBox.Text);
+                    Eliminar(id);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No hay registros, 'No Aplica' el proceso.");
+            }
         }
 
         private void Eliminar(int id)
         {
-            var resultado = _clientesBL.EliminarCliente(id);
-
+            var resultado = _clientes.EliminarCliente(id);
             if (resultado == true)
             {
                 listaClientesBindingSource.ResetBindings(false);
             }
             else
             {
-                MessageBox.Show("Ocurrio un error al eliminar el Cliente");
+                MessageBox.Show("Ocurrió un error al intentar eliminar el cliente.");
             }
         }
 
-        private void toolStripButton_Click(object sender, EventArgs e)
+        private void CancelarToolStripButton_Click(object sender, EventArgs e)
         {
-            _clientesBL.CancelarCambios();
+            _clientes.CancelarCambios();
             DeshabilitarHabilitarBotones(true);
-        }
-
-        private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
-        {
-            _clientesBL.AgregarCliente();
-            listaClientesBindingSource.MoveLast();
-
-            DeshabilitarHabilitarBotones(false);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            var cliente = (Cliente)listaClientesBindingSource.Current;
 
-        }
+            if (cliente != null)
+            {
+                openFileDialog1.ShowDialog();
+                var archivo = openFileDialog1.FileName;
 
-        private void nombreTextBox_TextChanged(object sender, EventArgs e)
-        {
+                if (archivo != "")
+                {
+                    var fileInfo = new FileInfo(archivo);
+                    var fileStream = fileInfo.OpenRead();
 
-        }
-
-        private void FormClientes_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void listaClientesBindingNavigatorSaveItem_Click_1(object sender, EventArgs e)
-        {
+                    fotoPictureBox.Image = Image.FromStream(fileStream);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Debe crear un cliente antes de asignarle una imagen");
+            }
             
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            fotoPictureBox.Image = null;
+        }
+
+        private void generoComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //listaClientesBindingSource.EndEdit();
+            //var cliente = (Cliente)listaClientesBindingSource.Current;
+
+            //int indice = generoComboBox.SelectedIndex;
+            //cliente.Genero = generoComboBox.SelectedText;
+
+            //cliente.Genero = generoComboBox.Items[indice].ToString();
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string buscar = textBox1.Text;
+
+            if (string.IsNullOrEmpty(buscar))
+            {
+                listaClientesBindingSource.DataSource = _clientes.ObtenerClientes();
+            }
+            else
+            {
+                listaClientesBindingSource.DataSource = _clientes.ObtenerClientes(buscar);
+            }
+
+            listaClientesBindingSource.ResetBindings(false);
         }
     }
 }
