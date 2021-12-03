@@ -2,7 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 
-namespace BL.Reposteria
+namespace BL.Fashion
 {
     public class ClientesBL
     {
@@ -24,6 +24,13 @@ namespace BL.Reposteria
             return ListaClientes;
         }
 
+        public BindingList<Cliente> ObtenerClientes(string buscar)
+        {
+            var resultado = _contexto.Clientes.Where(c => c.Nombre.ToLower().Contains(buscar.ToLower()));
+
+            return new BindingList<Cliente>(resultado.ToList());
+        }
+
         public void CancelarCambios()
         {
             foreach (var item in _contexto.ChangeTracker.Entries())
@@ -36,6 +43,7 @@ namespace BL.Reposteria
         public Resultado GuardarCliente(Cliente cliente)
         {
             var resultado = Validar(cliente);
+
             if (resultado.Exitoso == false)
             {
                 return resultado;
@@ -49,12 +57,12 @@ namespace BL.Reposteria
         public void AgregarCliente()
         {
             var nuevoCliente = new Cliente();
-            _contexto.Clientes.Add(nuevoCliente);
+            ListaClientes.Add(nuevoCliente);
         }
 
         public bool EliminarCliente(int id)
         {
-            foreach (var cliente in ListaClientes.ToList())
+            foreach (var cliente in ListaClientes)
             {
                 if (cliente.Id == id)
                 {
@@ -63,9 +71,9 @@ namespace BL.Reposteria
                     return true;
                 }
             }
-
             return false;
         }
+
 
         private Resultado Validar(Cliente cliente)
         {
@@ -74,17 +82,41 @@ namespace BL.Reposteria
 
             if (cliente == null)
             {
-                resultado.Mensaje = "Agregue un cliente valido";
+                resultado.Mensaje = "Agregue un cliente válido.";
                 resultado.Exitoso = false;
 
                 return resultado;
             }
 
-            if (string.IsNullOrEmpty(cliente.Nombre) == true)
+            if (string.IsNullOrEmpty (cliente.Nombre) == true)
             {
-                resultado.Mensaje = "Ingrese el nombre del cliente";
+                resultado.Mensaje = "Debe registrar el 'Nombre del Cliente'.";
                 resultado.Exitoso = false;
             }
+
+           // if (cliente.Precio <= 0)
+           // {
+           //     resultado.Mensaje = "El Precio debe ser mayor que cero.";
+           //     resultado.Exitoso = false;
+           // }
+
+           // if (cliente.Existencia < 0)
+           // {
+           //     resultado.Mensaje = "La Existencia debe ser mayor o igual a cero.";
+           //     resultado.Exitoso = false;
+           // }
+            
+           // if (cliente.TipoPersonaId == 0)
+           // {
+           //     resultado.Mensaje = "Debe registrar al Tipo de Persona al que refiere este Producto.";
+           //     resultado.Exitoso = false;
+           // }
+
+           // if (cliente.CategoriaId == 0)
+           // {
+           //     resultado.Mensaje = "Debe registrar una 'Categoría'.";
+           //     resultado.Exitoso = false;
+           // }
 
             return resultado;
         }
@@ -94,11 +126,39 @@ namespace BL.Reposteria
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
+        
+        public int TblClaseClteId { get; set; }
+        public TblClaseClte TblClaseClte { get; set; }
+        //public int PaisOrigenId { get; set; }
+        //public TblPais TblPais { get; set; }
+        public int TblPaisId { get; set; }
+        public TblPais TblPais { get; set; }
+        public int TblDeptoId { get; set; }
+        public TblDepto TblDepto { get; set; }
+        public int TblMunicipioId { get; set; }
+        public TblMunicipio TblMunicipio { get; set; }
+        public int TblSectorBoColId { get; set; }
+        public TblSectorBoCol TblSectorBoCol { get; set; }
+        public string Direccion { get; set; }
+
+        public string Tel1 { get; set; }
+        public string Tel2 { get; set; }
+        public string Email1 { get; set; }
+        public string Email2 { get; set; }
+
+        public string Genero { get; set; }
+
+        //public int TipoPersonaId { get; set; }
+        //public TblTipoPersona TblTipoPersona { get; set; }
+        //public int CategoriaId { get; set; }
+        //public TblCategoria TblCategoria { get; set; }
+        public byte[] Foto { get; set; }
         public bool Activo { get; set; }
 
         public Cliente()
         {
             Activo = true;
+            Foto = null;
         }
     }
 }
